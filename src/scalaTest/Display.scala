@@ -23,14 +23,16 @@ import java.awt.font._
 
 trait helpful{
 	val window_size=(800,600)
-			val rulla_size =(30,50)//percentage
-			val rulla_location = (70,10)//percentage
-			val speech_bub_size = (30,40)//percentage
-			val speech_bub_location = (30,rulla_location._2+10)//percentage
-			val laatikko_size = (100,20)//percentage
-			val laatikko_location = (0,80)//percentage
+			val rulla_size = %%(30,50)//percentage
+			val rulla_location = %%(70,10)//percentage
+			val speech_bub_size = %%(30,40)//percentage
+			val speech_bub_location = %%(30,20)//percentage
+			val laatikko_size = %%(100,20)//percentage
+			val laatikko_location = %%(0,80)//percentage
 			val talkmode_speech_location = (rulla_location._1 ,rulla_location._2)
 			val talkmode_answer_location = ((speech_bub_location._1 + (speech_bub_size._1/10)).toInt,0)
+			val notification_size = %%(40, 20)//percentage
+			val notification_location = %%(30,30)//percentage
 			val font_style = "Serif"
 			val font_size=((window_size._1+window_size._2)/75).toInt
 			def percentasize(percentage : Int, of : Int): Int ={
@@ -61,16 +63,21 @@ class MyPanel extends JPanel with helpful{
 							//var canvas = new Canvas(image.createGraphics())
 							var dispose_flag = false
 							var paint_flag = false 
-							var draw_flag = true
+							var notifications_pending = false
 							var autoclear = true
 							var clear_flag= true
+							var notification_text = ""
 							val myfont = new java.awt.Font(font_style, java.awt.Font.PLAIN, font_size)
 							val paint_thread = new Thread {
 		override def run {
 			while(true){
 				//if(paint_flag){
 				if(clear_flag){
-					fill_image(image.getGraphics)
+					fill_image(image.createGraphics())
+					if(notifications_pending){
+					  put_notification_to_image(image.createGraphics())
+					  notifications_pending = false
+					}
 					//paint_flag=false
 					//draw_flag=true
 					synchronized(set_clear_flag(false))
@@ -121,41 +128,36 @@ class MyPanel extends JPanel with helpful{
 	 * each row is in a element
 	 * when the line is cut in middle of a word it seeks the white space before it and puts the line division in there
 	 */
-	def set_drawable_string(str: String, point:(Int,Int),row : Int, color: Color, overwrite : Boolean = false){
+	def set_drawable_string(str: String, point1:(Int,Int),row : Int, color: Color, overwrite : Boolean = false){
 		var words = str.split('\n')
+		var point = point1
 				if(overwrite){
 					drawable_string.clear()
 				}
 		for(wrd <- words){
 			if(wrd!="null"){
-				var charar = wrd.toCharArray()
-						var length = wrd.length()
-
-						//println("if((" + (length -1) + ")>" + row + ")")
-						length = length/row
-						length = length.toInt
-						var row1 = row
-						if(length ==0){length = 1}
-				//println("sentence id split to " + length + " rows")
-
-				var row2 = row1
-
-						if(length> 1){
-							for(i <- 0 to length-1){
-								row2 = row1
-										while(wrd.charAt((i*row1)+row1) != ' '){
-											//println("while(wrd.charAt((" + i + "*" + row2 + ")+" + row1 + ") != 32 || wrd.charAt((" + i + "*" + row2 + ")+" + row1 + ") != 10)")
-											//println("while(" + wrd.charAt((i*row2)+row1) + " != 32 || " + wrd.charAt((i*row2)+row1) + " != 10)")
-											row1 = row1-1
+						var amount_of_rows = wrd.length() / row
+						amount_of_rows = amount_of_rows.toInt
+						var new_line = 0
+				var old_line = 0
+						if(amount_of_rows >= 1){
+							for(i <- 0 to amount_of_rows -1){
+								new_line = row
+										while(wrd.charAt(old_line+new_line) != ' '){
+											new_line -= 1
 										}
-								//println("row1 == " + row1)
-								strings.append(((wrd.substring(i*row2,((i*row1)+row1)),color),point))
-								println("from : " + i*row1 + " to : " + ((i*row1)+row1))
+								new_line += 1
+								strings.append(((wrd.substring(old_line,(old_line+new_line)),color),point))
+								point = (point._1,point._2 + font_size)
+								old_line += new_line
 							}
-							strings.append(((wrd.substring(length*row1),color),point))
+							
+							strings.append(((wrd.substring(old_line),color),point))
 						}else{
 							strings.append(((wrd,color),point))}
+						//println("point = " + point)
 			}
+			
 		}
 	}
 
@@ -167,10 +169,22 @@ class MyPanel extends JPanel with helpful{
 				if(asd == 8){written_letter=written_letter.substring(0, written_letter.length() - 1)}
 				else{ written_letter+=letter1}
 	}
+	
+	def set_pending_notification(notification_text1 : String){
+	  notification_text = notification_text1
+	  notifications_pending=true
+	}
+	
+	def put_notification_to_image(g:Graphics2D){
+	  var image1 = ImageIO.read(new File("images/dialogi.png"))
+	  g.drawImage(image1, notification_location._1, notification_location._2, notification_size._1,notification_size._2 , null)
+	  g.setColor(Color.BLACK)
+	  g.setFont(myfont)
+	  g.drawString(notification_text, notification_location._1+20, notification_location._2 + 40)
+	}
 
 
-	def fill_image(g :Graphics){
-	  
+	def fill_image(g : Graphics2D){
 	  
 		for(imageA <- images){
 		  var image1 = new BufferedImage(10,10,BufferedImage.TYPE_INT_RGB)
@@ -195,7 +209,7 @@ class MyPanel extends JPanel with helpful{
 			  if(string._1._1 != ""){
 						g.setColor(string._1._2)
 						g.setFont(myfont)
-						g.drawString(string._1._1,string._2._1,string._2._2 + (i*row_height))
+						g.drawString(string._1._1, string._2._1, string._2._2)
 						i = i +1
 			}
 			//strings.clear()
@@ -207,7 +221,7 @@ class MyPanel extends JPanel with helpful{
 			  }
 			}
 			
-		g.dispose()
+		
 	}
 	/*
 	 * this is called with repaint()
@@ -284,7 +298,7 @@ class Display extends JFrame() with helpful{
 				panel.drawable_string.clear()
 				image_infoarray.clear()
 				image_infoarray.append((filename,point,(frame.getWidth,frame.getHeight)))
-				draw_on_top("laatikko.png",%%(laatikko_location),%%(laatikko_size))
+				draw_on_top("laatikko.png",(laatikko_location),(laatikko_size))
 	}
 	/*
 	 * sets a single character to var letter in MyPanel class

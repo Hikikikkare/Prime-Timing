@@ -196,7 +196,7 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 									for(aaa <- hits) {
 										map.removeItems(aaa); 
 										inventory.append(aaa); 
-										interface.out(s"took $aaa")
+										interface.update_notification(s"took $aaa",5)
 									}
 								else{
 									interface.out("there is no: ",false)

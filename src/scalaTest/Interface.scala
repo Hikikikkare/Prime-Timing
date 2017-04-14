@@ -17,6 +17,10 @@ class Interface extends Display with helpful{
 	var command = ""
 			var talkflg=false
 			val old_commands = new ArrayBuffer[String]
+	  var description = ""
+	  var cycles = (0,0)
+	  var notification = ""
+	  
 
 			def out(text: String, newline: Boolean = true){
 		if(newline)
@@ -34,10 +38,31 @@ class Interface extends Display with helpful{
 				if(text.length < 1){
 					out("Error:: cannot find place description")
 				}else{
-					out(text(0))
+					description = text(0)
 				}
 	}
-/*this was modified before adding this thing in here*/
+
+	def print_description(){
+	  draw_string(description,(rulla_location._1 + 30, rulla_location._2 + 80),20)
+	}
+	/*
+	 * cycles		=		How many cycles this message is up
+	 */
+	def print_notifications(){
+	  if(notification != ""){
+	  if(cycles._2 < cycles._1){
+	    panel.set_pending_notification(notification)
+	    cycles= (cycles._1,cycles._2 + 1)
+	  }else{cycles = (0,0)
+	    notification=""}
+	  }
+	}
+	def update_notification(notification1 : String, cycles1 : Int){
+	  if(cycles1 > 0){
+	  notification = notification1
+	  cycles = (cycles1,0)
+	  }
+	}
 	def read = {
 			var str=""
 					if(command!=""){
@@ -52,7 +77,7 @@ class Interface extends Display with helpful{
 
 			def update(location : String){
 		draw(location + ".png")
-		draw_on_top("rulla.png", %%(rulla_location._1,rulla_location._2), %%(rulla_size._1,rulla_size._2))
+		draw_on_top("rulla.png", (rulla_location._1,rulla_location._2), (rulla_size._1,rulla_size._2))
 	}
 	/*
 	 * Creates resizable Layout for the game
@@ -75,11 +100,15 @@ class Interface extends Display with helpful{
 		def keyReleased(e:KeyEvent){}})
 
 	def print_old_commands(){
+	  var r = (laatikko_location._1 + rulla_location._1 , laatikko_location._2)
 		if(old_commands.length > 4){
 			old_commands.remove(0)
 		}
 		for(com <- old_commands.reverse){
-			draw_string(com,%%(laatikko_location._1 + 50, laatikko_location._2),30,Color.WHITE)
+		  if(com != ""){
+			draw_string(com,(r._1, r._2),30,Color.WHITE)
+			r = (r._1, r._2 + font_size) // rivitys
+		  }
 		}
 	}
 
@@ -103,7 +132,6 @@ class Interface extends Display with helpful{
 	def get_command()={
 			val ret = command
 					if(command != ""){
-						println("command in get_command ====>" + command)
 						old_commands.append(ret)
 					}
 			command=""
@@ -112,8 +140,8 @@ class Interface extends Display with helpful{
 
 	def talkmode(npc : Npc, location_image : String){
 		draw(location_image)
-		draw_on_top(npc.image, %%(0,0),%%(30,35))
-		draw_on_top("dialogi.png", %%(rulla_location), %%(rulla_size))
+		draw_on_top(npc.image, (0,0),%%(30,35))
+		draw_on_top("dialogi.png", (rulla_location), (rulla_size))
 		var answer = false
 		draw_string(npc.speak(),(600,130),30)
 		panel.autoclear=false
@@ -127,8 +155,8 @@ class Interface extends Display with helpful{
 				panel.strings.clear()
 				draw_string(npc.speak(),(600,130),30)
 				var ans = npc.listen(command)
-				draw_on_top("speech_bubble.png", %%(speech_bub_location),%%(speech_bub_size))
-				draw_string(npc.name + " : " + ans,%%(talkmode_answer_location),25,Color.BLACK)
+				draw_on_top("speech_bubble.png", (speech_bub_location),(speech_bub_size))
+				draw_string(npc.name + " : " + ans,(talkmode_answer_location),25,Color.BLACK)
 				command = ""
 			}
 			if(answer){

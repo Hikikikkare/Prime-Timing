@@ -42,6 +42,7 @@ object Database {
   def apply(column: String, table: String, where: String = ""){
     
     try{
+      println("HERE?")
       println(s"select $column from $table where ($where);")
       query(column,table,where)
     }catch{

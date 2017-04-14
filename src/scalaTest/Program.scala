@@ -42,6 +42,8 @@ class Program(interface: Interface) {
 								if(!interface.is_ok_to_draw_string){
 									interface.npc_shoutout(getNpcLocation(player.locationID))
 									interface.print_old_commands()
+									interface.print_description()
+									interface.print_notifications()
 									interface.i_set_clear_flag(true)
 								}
 							}
