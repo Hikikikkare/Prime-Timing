@@ -43,7 +43,7 @@ class Interface extends Display with helpful{
 	}
 
 	def print_description(){
-	  draw_string(description,(rulla_location._1 + 30, rulla_location._2 + 80),20)
+	  draw_string(description,(rulla_location._1 + 60, rulla_location._2 + 80),20)
 	}
 	/*
 	 * cycles		=		How many cycles this message is up
@@ -70,8 +70,6 @@ class Interface extends Display with helpful{
 					}
 			str
 	}
-
-
 
 	
 

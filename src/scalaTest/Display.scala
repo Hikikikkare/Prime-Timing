@@ -22,7 +22,7 @@ import java.awt.font._
  */
 
 trait helpful{
-	val window_size=(800,600)
+	val window_size=(1000,600)
 			val rulla_size = %%(30,50)//percentage
 			val rulla_location = %%(70,10)//percentage
 			val speech_bub_size = %%(30,40)//percentage
