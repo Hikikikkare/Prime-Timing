@@ -37,7 +37,7 @@ class Interface extends Display with helpful{
 					out(text(0))
 				}
 	}
-
+/*this was modified before adding this thing in here*/
 	def read = {
 			var str=""
 					if(command!=""){
