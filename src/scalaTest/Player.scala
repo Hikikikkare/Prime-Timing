@@ -40,7 +40,7 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 		locationID = temp
 		try{location = map.getLocationName(locationID)}
 		catch {case e: Throwable => println(locationID)}
-				interface.out(s"moved to $location ($locationID)");
+		interface.out(s"moved to $location ($locationID)")
 		interface.updateDescription(locationID)
 		lastAction="move"+locationID
 		
@@ -146,7 +146,7 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 		target match{
 		case "crowbar" =>{
 			if(locationID==4){
-				interface.out("you smashed the lock")
+				interface.update_notification("you smashed the lock", 10)
 				lastAction="use_crowbar";
 				map.removeItems("lock")
 			}else{
@@ -173,6 +173,9 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 
 			if(a.length > 0 ){// if object was given
 				val npc = program.getNpcLocation(locationID)
+				
+				
+				
 						if(npc!=null && npc.name == a(0)){
 							interface.talkmode(npc, location + ".png")
 						}else{interface.out("that person is not here!")}
@@ -257,9 +260,8 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 	}
 
 	def lookAround(a : ArrayBuffer[parser.Word with parser.order])={
-			interface.out("you see:")
 			val list = map.getItemList(locationID)
-			println(list)
+			interface.update_notification("you see : \n" + list, 10)
 			true
 
 	}

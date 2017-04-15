@@ -40,7 +40,7 @@ class Program(interface: Interface) {
 								}
 								//graafa update
 								if(!interface.is_ok_to_draw_string){
-									interface.npc_shoutout(getNpcLocation(player.locationID))
+									interface.npc_shoutout()
 									interface.print_old_commands()
 									interface.print_description()
 									interface.print_notifications()
@@ -58,7 +58,7 @@ class Program(interface: Interface) {
 										player.action(player.move,command.targets)
 									}
 									case "unkn" => {
-										interface.out("type 'b' to go back")
+										interface.add_to_description("\ntype 'b' to go back")
 									}
 									case "toom" => {
 										interface.out("too many commands")
@@ -79,9 +79,12 @@ class Program(interface: Interface) {
 										case "move" => {
 											if(player.action(player.move,command.targets)){
 												interface.update(player.location)
+												println("will back work? player location = " + player.location)
 												if(map.isBlocked(player.locationID)){
 													quick=true
-															interface.out("type 'b' to go back")
+													interface.add_to_description("type 'b' to go back")
+												}else{
+												  // tänn interfacen npc tietojen päivitys
 												}
 											}
 
@@ -184,7 +187,9 @@ class Program(interface: Interface) {
 							}
 
 							def getNpcLocation(a: Int) : Npc ={
+							  
 									val nn = for(n <- characters if n.location == a) yield n
+									
 											if(nn.length >0){
 												nn(0)
 											}else{

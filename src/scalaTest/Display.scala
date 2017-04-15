@@ -166,7 +166,7 @@ class MyPanel extends JPanel with helpful{
 	 */
 	def setchar(letter1 : String){
 		var asd = letter1.charAt(letter1.length()-1) :Int
-				if(asd == 8){written_letter=written_letter.substring(0, written_letter.length() - 1)}
+				if(asd == 8 && written_letter.length > 0){written_letter=written_letter.substring(0, written_letter.length() - 1)}
 				else{ written_letter+=letter1}
 	}
 	

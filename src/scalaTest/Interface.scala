@@ -18,8 +18,10 @@ class Interface extends Display with helpful{
 			var talkflg=false
 			val old_commands = new ArrayBuffer[String]
 	  var description = ""
+	  var description_extra = ""
 	  var cycles = (0,0)
 	  var notification = ""
+	  var NPC = ""
 	  
 
 			def out(text: String, newline: Boolean = true){
@@ -33,17 +35,24 @@ class Interface extends Display with helpful{
 		out(text.toString(), false);
 	}
 
-	def updateDescription(loc: Int){
+	def updateDescription(loc: Int= -1){
 		val text = Database.query("kuvaus", "location", "idlocation = "+loc)
 				if(text.length < 1){
-					out("Error:: cannot find place description")
 				}else{
-					description = text(0)
-				}
+				    description =text(0)
+				    description_extra = ""
+				  }
 	}
-
+  def add_to_description(extra1 : String){
+    description_extra = extra1
+  }
 	def print_description(){
-	  draw_string(description,(rulla_location._1 + 60, rulla_location._2 + 80),20)
+	  val row_length = 20
+	  draw_string(description,(rulla_location._1 + 60, rulla_location._2 + 80),row_length)
+	  if(description_extra != ""){
+	    var row = (description.length / row_length).toInt + 2
+	    draw_string(description_extra,(rulla_location._1 + 60, rulla_location._2 + 80 + (row_length * row)),row_length)
+	  }
 	}
 	/*
 	 * cycles		=		How many cycles this message is up
@@ -57,7 +66,7 @@ class Interface extends Display with helpful{
 	    notification=""}
 	  }
 	}
-	def update_notification(notification1 : String, cycles1 : Int){
+	def update_notification(notification1 : String, cycles1 : Int = 10){
 	  if(cycles1 > 0){
 	  notification = notification1
 	  cycles = (cycles1,0)
@@ -110,10 +119,14 @@ class Interface extends Display with helpful{
 		}
 	}
 
-	def npc_shoutout(NPC : Npc){
-		if(NPC != null){
-			draw_string(NPC.name + " is here!", (50,550), 30, Color.WHITE)
+	def npc_shoutout(){
+		if(NPC != ""){
+		  draw_on_top(NPC + ".png", (0,0),%%(30,35))
+			draw_string(NPC + " is here!", (50,550), 30, Color.WHITE)
 		}
+	}
+	def update_npc(NPC_name : String){
+	  NPC = NPC_name
 	}
 	def is_ok_to_draw_string(): Boolean ={
 			val ret = panel.clear_flag
@@ -135,7 +148,6 @@ class Interface extends Display with helpful{
 			command=""
 					ret
 	}
-
 	def talkmode(npc : Npc, location_image : String){
 		draw(location_image)
 		draw_on_top(npc.image, (0,0),%%(30,35))
@@ -165,7 +177,7 @@ class Interface extends Display with helpful{
 			//panel.strings.clear()
 
 		}
-		panel.autoclear=true
+		  panel.autoclear=true
 				update(location_image)
 				println("bye!!!")
 	}
