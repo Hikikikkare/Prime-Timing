@@ -133,10 +133,14 @@ class MyPanel extends JPanel with helpful{
 		var point = point1
 		for(wrd <- words){
 			if(wrd!="null"){
+			  
 						var amount_of_rows = wrd.length() / row
 						amount_of_rows = amount_of_rows.toInt
 						var new_line = 0
 				var old_line = 0
+				if(wrd.length() == row){
+				  amount_of_rows=0;
+				}
 						if(amount_of_rows >= 1){
 							for(i <- 0 to amount_of_rows -1){
 								new_line = row

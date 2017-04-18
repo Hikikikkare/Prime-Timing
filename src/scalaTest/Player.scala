@@ -8,7 +8,7 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 	var prevMovement="";
 	var lastAction = "";
 	val inventory = new ArrayBuffer[String]()
-			val cardList = Array(("1700",38),("1300",49),("2014",1))
+			val cardList = Array(("1700",49),("1300",49),("2014",1))
 			val itemList = Array(("crowbar",0),("fish",0),("small rocks",0))
 
 			println(s"you are in :$location ($locationID)")
@@ -175,9 +175,9 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 			if(a.length > 0 ){// if object was given
 				val npc = program.getNpcLocation(locationID)
 				
+				println("a(0) = " + a(0) + " npc.name = " + npc.name)
 				
-				
-						if(npc!=null && npc.name == a(0)){
+						if(npc!=null && npc.name == a(0).str){
 							interface.talkmode(npc, location + ".png")
 						}else{interface.out("that person is not here!")}
 			}else{

@@ -34,9 +34,9 @@ class Npc(val name: String, val location: Int, val image : String = "kuva1.png")
 					speak.remove(17)// remove id location
 					speak.remove(1)// remove id speak
 					for(s <- speak){
-						ret = ret + s + '\n'
+						ret = ret + s + "\n"
 					}
-			ret
+			speak
 	}
 	
 	def listen(player_answer : String)={

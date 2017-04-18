@@ -166,7 +166,8 @@ class Interface extends Display with helpful{
 		draw_on_top(npc.image, (0,0),%%(30,35))
 		draw_on_top("dialogi.png", (rulla_location), (rulla_size))
 		var answer = false
-		draw_string(npc.speak(),(600,130),30)
+		i_npc_speak(npc.speak())
+		//draw_string(dialogue(0),(rulla_location._1 + 30, rulla_location._2 + 30),30)
 		panel.autoclear=false
 		while(command != "exit"){
 
@@ -176,17 +177,15 @@ class Interface extends Display with helpful{
 			if(command != ""){
 				println("COMMAND!!!! ========> " + command)
 				panel.strings.clear()
-				draw_string(npc.speak(),(600,130),30)
+				i_npc_speak(npc.speak())
 				var ans = npc.listen(command)
 				draw_on_top("speech_bubble.png", (speech_bub_location),(speech_bub_size))
-				draw_string(npc.name + " : " + ans,(talkmode_answer_location),25,Color.BLACK)
+				draw_string(npc.name + " : " + ans,(speech_bub_location._1 + 60,speech_bub_location._2 + 120),25,Color.BLACK)
 				command = ""
-			}
-			if(answer){
-
 			}
 
 			Thread.sleep(10)
+			i_set_clear_flag(true);
 			//panel.strings.clear()
 
 		}
@@ -194,7 +193,15 @@ class Interface extends Display with helpful{
 				update(location_image)
 				println("bye!!!")
 	}
-
+def i_npc_speak(a : ArrayBuffer[String]){
+  var row = 0
+  for(b <- a){
+    if(b != null){
+  draw_string(b,(rulla_location._1 + 30, rulla_location._2 + (row*font_size) + 30),30)
+  row += (b.length()/30) + 1
+    }
+  }
+}
 }
 
 
