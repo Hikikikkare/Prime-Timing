@@ -67,7 +67,7 @@ class MyPanel extends JPanel with helpful{
 							var autoclear = true
 							var clear_flag= true
 							var notification_text = ""
-							val myfont = new java.awt.Font(font_style, java.awt.Font.PLAIN, font_size)
+							var myfont = new java.awt.Font(font_style, java.awt.Font.PLAIN, font_size)
 							val paint_thread = new Thread {
 		override def run {
 			while(true){
@@ -128,12 +128,9 @@ class MyPanel extends JPanel with helpful{
 	 * each row is in a element
 	 * when the line is cut in middle of a word it seeks the white space before it and puts the line division in there
 	 */
-	def set_drawable_string(str: String, point1:(Int,Int),row : Int, color: Color, overwrite : Boolean = false){
+	def set_drawable_string(str: String, point1:(Int,Int),row : Int, color: Color){
 		var words = str.split('\n')
 		var point = point1
-				if(overwrite){
-					drawable_string.clear()
-				}
 		for(wrd <- words){
 			if(wrd!="null"){
 						var amount_of_rows = wrd.length() / row
@@ -312,8 +309,8 @@ class Display extends JFrame() with helpful{
 	 * sets drawable_string to MyPanel object
 	 * draws the images array and the text on top
 	 */
-	def draw_string(str : String,point : (Int,Int), row_length : Int, color :Color = Color.BLACK, overwrite :Boolean =false){
-		panel.set_drawable_string(str, point,row_length,color, overwrite)
+	def draw_string(str : String,point : (Int,Int), row_length : Int, color :Color = Color.BLACK){
+		panel.set_drawable_string(str, point,row_length,color)
 		//panel.paint_flag =true
 		//frame.repaint()
 	}

@@ -41,6 +41,7 @@ var location : String = "Forest Center 2014", var locationID : Int = 1) {
 		try{location = map.getLocationName(locationID)}
 		catch {case e: Throwable => println(locationID)}
 		interface.out(s"moved to $location ($locationID)")
+		interface.update(location)
 		interface.updateDescription(locationID)
 		lastAction="move"+locationID
 		

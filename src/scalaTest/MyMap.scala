@@ -126,6 +126,16 @@ class MyMap() {
 					def addItemToMap(a: Int, item: String){
 						items += (item->a)
 					}
+					
+					
+  def create_npcs()={
+    val b = Database.query("idlocation, name", "characters")
+    val npclist= new ArrayBuffer[Npc]
+    npclist.append(new Npc(b(1),b(0).toInt))
+    for(i <- 2 to b.length - 1 by 2){npclist.append(new Npc(b(i+1),b(i).toInt))}
+    npclist
+  }
+
 
 
 

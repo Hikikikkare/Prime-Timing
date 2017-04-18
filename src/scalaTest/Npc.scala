@@ -56,6 +56,9 @@ class Npc(val name: String, val location: Int, val image : String = "kuva1.png")
 			def set_questmode(new_quest_mode : Int){
 		quest_mode = new_quest_mode
 	}
+	override def toString : String = {
+	  name
+	}
   
   
 }

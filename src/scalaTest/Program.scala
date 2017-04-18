@@ -9,14 +9,14 @@ class Program(interface: Interface) {
 
 	val opposite = Map("south" -> "north", "west" -> "east", "north" -> "south" , "east" -> "west")
 
-			val characters = for (a <- characterList) yield Npc(a,0,"")
+			
 			val openQuests=new ArrayBuffer[Quests]
 					val closedQuests=new ArrayBuffer[Quests]
 
 							var map = new MyMap()
 							var player = new Player(this, interface, map)
 							var parsero = new Parser()
-
+              val characters = map.create_npcs()
 							var quick:Boolean=false;
 
 							for(i <- 0 until Quests.amount) closedQuests += Quests(this,i, "q"+(i+1))
@@ -39,14 +39,10 @@ class Program(interface: Interface) {
 
 								}
 								//graafa update
-								if(!interface.is_ok_to_draw_string){
-									interface.npc_shoutout()
-									interface.print_old_commands()
-									interface.print_description()
-									interface.print_notifications()
-									interface.i_set_clear_flag(true)
-								}
+								interface.draw_frame()
+								
 							}
+							
 
 							def quickMode(list : ArrayBuffer[parser.Command]){
 								for (command <- list){
@@ -79,7 +75,6 @@ class Program(interface: Interface) {
 										case "move" => {
 											if(player.action(player.move,command.targets)){
 												interface.update(player.location)
-												println("will back work? player location = " + player.location)
 												if(map.isBlocked(player.locationID)){
 													quick=true
 													interface.add_to_description("type 'b' to go back")

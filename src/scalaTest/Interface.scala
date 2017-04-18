@@ -22,7 +22,7 @@ class Interface extends Display with helpful{
 	  var cycles = (0,0)
 	  var notification = ""
 	  var NPC = ""
-	  
+	  var location_i = ""
 
 			def out(text: String, newline: Boolean = true){
 		if(newline)
@@ -48,6 +48,7 @@ class Interface extends Display with helpful{
   }
 	def print_description(){
 	  val row_length = 20
+	  draw_string(location_i,(1,font_size),50,Color.WHITE)
 	  draw_string(description,(rulla_location._1 + 60, rulla_location._2 + 80),row_length)
 	  if(description_extra != ""){
 	    var row = (description.length / row_length).toInt + 2
@@ -82,9 +83,11 @@ class Interface extends Display with helpful{
 
 	
 
-			def update(location : String){
-		draw(location + ".png")
+			def update(location1 : String){
+			  location_i = location1
+		draw(location1 + ".png")
 		draw_on_top("rulla.png", (rulla_location._1,rulla_location._2), (rulla_size._1,rulla_size._2))
+		draw_string(location_i,(0,0),50)
 	}
 	/*
 	 * Creates resizable Layout for the game
@@ -105,6 +108,16 @@ class Interface extends Display with helpful{
 		}
 		def keyPressed(e:KeyEvent){}
 		def keyReleased(e:KeyEvent){}})
+		
+		def draw_frame(){
+							  if(!is_ok_to_draw_string){
+									npc_shoutout()
+									print_old_commands()
+									print_description()
+									print_notifications()
+									i_set_clear_flag(true)
+								}
+							}
 
 	def print_old_commands(){
 	  var r = (laatikko_location._1 + rulla_location._1 , laatikko_location._2)
